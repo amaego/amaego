@@ -47,6 +47,7 @@
                 /* background-color: gray; */
             }
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script>
             var nilaiSuhu = "25";
             var disableButton = true;
@@ -71,6 +72,16 @@
                 }else if (code == "min" && Number(nilaiSuhu) > 15){
                     nilaiSuhu = Number(nilaiSuhu) - 1;
                 }
+                $.ajax({    
+                    url: 'https://api.thingspeak.com/update?api_key=LPWLFMNUQKYB7BMT&field1=' + nilaiSuhu,
+                    type: 'GET',
+                    success: function(response) {
+                        nilaiSuhu = response
+                    },
+                    error: function() {
+                        $('#errors').text("There was an error processing your request. Please try again.");
+                    }
+                });
                 text = nilaiSuhu + " °C";
                 // console.log(nilaiSuhu)
                 document.getElementById("suhu").innerHTML = text;
@@ -92,7 +103,24 @@
             }
 
             function getNilaiSuhuFunction() {
-                document.getElementById("suhu").innerHTML = nilaiSuhu + " °C";
+                $.ajax({    
+                    url: 'https://api.thingspeak.com/channels/1397159/fields/1/last.txt',
+                    type: 'GET',
+                    // data: {
+                    //     field1: 'text'
+                    // },
+                    success: function(response) {
+                        // nilaiSuhu = response.field1
+                        // console.log(response)
+                        nilaiSuhu = response
+                        document.getElementById("suhu").innerHTML = response + " °C";
+                        // return nilaiSuhu
+                    },
+                    error: function() {
+                        $('#errors').text("There was an error processing your request. Please try again.");
+                    }
+                });
+                // document.getElementById("suhu").innerHTML = nilaiSuhu + " °C";
             }
         </script>
     </body>

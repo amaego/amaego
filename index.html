@@ -51,9 +51,15 @@
         <script>
             var nilaiSuhu = "25";
             var disableButton = true;
+            // Import the functions you need from the SDKs you need
+            // import { initializeApp } from "firebase/app";
+            // import { getAnalytics } from "firebase/analytics";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
         </script>
     </head>
-    <body onload="getNilaiSuhuFunction()">
+    <!-- <body onload="getNilaiSuhuFunction()"> -->
+    <body">
         <div class="border_utama">
             <div class="border_layar">
                 <p class="suhu" id="suhu">---</p>
@@ -64,27 +70,82 @@
             </div>
             <button class="button_type_2 button_power" onclick="disableButtonFunction()">Power</button>
         </div>
+        <!-- <script>
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+            apiKey: "AIzaSyCBfmNO7jvzRuNzqY52AnurOOdtIOFiBK0",
+            authDomain: "remoteacsharp.firebaseapp.com",
+            databaseURL: "https://remoteacsharp-default-rtdb.firebaseio.com",
+            projectId: "remoteacsharp",
+            storageBucket: "remoteacsharp.appspot.com",
+            messagingSenderId: "650415441563",
+            appId: "1:650415441563:web:b73460fd572833d83f283e",
+            measurementId: "G-S10E3VJQFX"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+        </script> -->
+        <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
+        <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCBfmNO7jvzRuNzqY52AnurOOdtIOFiBK0",
+            authDomain: "remoteacsharp.firebaseapp.com",
+            databaseURL: "https://remoteacsharp-default-rtdb.firebaseio.com",
+            projectId: "remoteacsharp",
+            storageBucket: "remoteacsharp.appspot.com",
+            messagingSenderId: "650415441563",
+        };
+        firebase.initializeApp(config);
+        </script>
+        <script>
+            var tempVal = document.getElementById('suhu');
+            var temperatur = firebase.database().ref().child('Temperature');
+            temperatur.on('value', snap => tempVal.innerText = snap.val() + " °C");
+            temperatur.on('value', snap => nilaiSuhu = snap.val());
+            // nilaiSuhu = temperatur;
+            // console.log(nilaiSuhu);
+        </script>
+
         <script>
             function remoteFunction(code) {
-                let text;
-                if(code == "plus" && Number(nilaiSuhu) < 35){
+                // let text;
+                // if(code == "plus" && Number(nilaiSuhu) < 35){
+                //     nilaiSuhu = Number(nilaiSuhu) + 1;
+                // }else if (code == "min" && Number(nilaiSuhu) > 15){
+                //     nilaiSuhu = Number(nilaiSuhu) - 1;
+                // }
+                // $.ajax({    
+                //     url: 'https://api.thingspeak.com/update?api_key=LPWLFMNUQKYB7BMT&field1=' + nilaiSuhu,
+                //     type: 'GET',
+                //     success: function(response) {
+                //         if (response >= 15 && response <= 35){
+                //             nilaiSuhu = response
+                //         }
+                //     },
+                //     error: function() {
+                //         $('#errors').text("There was an error processing your request. Please try again.");
+                //     }
+                // });
+                // text = nilaiSuhu + " °C";
+                // // console.log(nilaiSuhu)
+                // document.getElementById("suhu").innerHTML = text;
+                // const newPostKey = push(child(ref(db), 'posts')).key;
+                if(code == "plus"  && Number(nilaiSuhu) < 35){
+                    var updateSuhu = firebase.database().ref().child('Temperature');
                     nilaiSuhu = Number(nilaiSuhu) + 1;
+                    updateSuhu.set(nilaiSuhu);
                 }else if (code == "min" && Number(nilaiSuhu) > 15){
+                    var updateSuhu = firebase.database().ref().child('Temperature');
                     nilaiSuhu = Number(nilaiSuhu) - 1;
+                    updateSuhu.set(nilaiSuhu);
                 }
-                $.ajax({    
-                    url: 'https://api.thingspeak.com/update?api_key=LPWLFMNUQKYB7BMT&field1=' + nilaiSuhu,
-                    type: 'GET',
-                    success: function(response) {
-                        nilaiSuhu = response
-                    },
-                    error: function() {
-                        $('#errors').text("There was an error processing your request. Please try again.");
-                    }
-                });
-                text = nilaiSuhu + " °C";
-                // console.log(nilaiSuhu)
-                document.getElementById("suhu").innerHTML = text;
+
+
             }
 
             function disableButtonFunction() {
@@ -102,26 +163,26 @@
                 }
             }
 
-            function getNilaiSuhuFunction() {
-                $.ajax({    
-                    url: 'https://api.thingspeak.com/channels/1397159/fields/1/last.txt',
-                    type: 'GET',
-                    // data: {
-                    //     field1: 'text'
-                    // },
-                    success: function(response) {
-                        // nilaiSuhu = response.field1
-                        // console.log(response)
-                        nilaiSuhu = response
-                        document.getElementById("suhu").innerHTML = response + " °C";
-                        // return nilaiSuhu
-                    },
-                    error: function() {
-                        $('#errors').text("There was an error processing your request. Please try again.");
-                    }
-                });
-                // document.getElementById("suhu").innerHTML = nilaiSuhu + " °C";
-            }
+            // function getNilaiSuhuFunction() {
+            //     $.ajax({    
+            //         url: 'https://api.thingspeak.com/channels/1397159/fields/1/last.txt',
+            //         type: 'GET',
+            //         // data: {
+            //         //     field1: 'text'
+            //         // },
+            //         success: function(response) {
+            //             // nilaiSuhu = response.field1
+            //             // console.log(response)
+            //             nilaiSuhu = response
+            //             document.getElementById("suhu").innerHTML = response + " °C";
+            //             // return nilaiSuhu
+            //         },
+            //         error: function() {
+            //             $('#errors').text("There was an error processing your request. Please try again.");
+            //         }
+            //     });
+            //     // document.getElementById("suhu").innerHTML = nilaiSuhu + " °C";
+            // }
         </script>
     </body>
 </html>

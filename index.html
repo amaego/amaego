@@ -70,47 +70,6 @@
             </div>
             <button class="button_type_2 button_power" onclick="disableButtonFunction()">Power</button>
         </div>
-        <!-- <script>
-
-            // Your web app's Firebase configuration
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-            const firebaseConfig = {
-            apiKey: "AIzaSyCBfmNO7jvzRuNzqY52AnurOOdtIOFiBK0",
-            authDomain: "remoteacsharp.firebaseapp.com",
-            databaseURL: "https://remoteacsharp-default-rtdb.firebaseio.com",
-            projectId: "remoteacsharp",
-            storageBucket: "remoteacsharp.appspot.com",
-            messagingSenderId: "650415441563",
-            appId: "1:650415441563:web:b73460fd572833d83f283e",
-            measurementId: "G-S10E3VJQFX"
-            };
-
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const analytics = getAnalytics(app);
-        </script> -->
-        <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
-        <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyCBfmNO7jvzRuNzqY52AnurOOdtIOFiBK0",
-            authDomain: "remoteacsharp.firebaseapp.com",
-            databaseURL: "https://remoteacsharp-default-rtdb.firebaseio.com",
-            projectId: "remoteacsharp",
-            storageBucket: "remoteacsharp.appspot.com",
-            messagingSenderId: "650415441563",
-        };
-        firebase.initializeApp(config);
-        </script>
-        <script>
-            var tempVal = document.getElementById('suhu');
-            var temperatur = firebase.database().ref().child('Temperature');
-            temperatur.on('value', snap => tempVal.innerText = snap.val() + " °C");
-            temperatur.on('value', snap => nilaiSuhu = snap.val());
-            // nilaiSuhu = temperatur;
-            // console.log(nilaiSuhu);
-        </script>
-
         <script>
             function remoteFunction(code) {
                 // let text;
@@ -154,12 +113,16 @@
                     document.getElementById("button_plus").disabled = true;
                     disableButton = false;
                     document.getElementById("suhu").innerHTML = "---";
+                    var updatePower = firebase.database().ref().child('Power');
+                    updatePower.set(0);
                 }else{
                     document.getElementById("button_min").disabled = false;
                     document.getElementById("button_plus").disabled = false;
                     disableButton = true;
                     text = nilaiSuhu + " °C";
                     document.getElementById("suhu").innerHTML = text;
+                    var updatePower = firebase.database().ref().child('Power');
+                    updatePower.set(1);
                 }
             }
 
@@ -184,5 +147,62 @@
             //     // document.getElementById("suhu").innerHTML = nilaiSuhu + " °C";
             // }
         </script>
+
+        <!-- <script>
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+            apiKey: "AIzaSyCBfmNO7jvzRuNzqY52AnurOOdtIOFiBK0",
+            authDomain: "remoteacsharp.firebaseapp.com",
+            databaseURL: "https://remoteacsharp-default-rtdb.firebaseio.com",
+            projectId: "remoteacsharp",
+            storageBucket: "remoteacsharp.appspot.com",
+            messagingSenderId: "650415441563",
+            appId: "1:650415441563:web:b73460fd572833d83f283e",
+            measurementId: "G-S10E3VJQFX"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+        </script> -->
+        <script src="https://www.gstatic.com/firebasejs/5.5.6/firebase.js"></script>
+        <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCBfmNO7jvzRuNzqY52AnurOOdtIOFiBK0",
+            authDomain: "remoteacsharp.firebaseapp.com",
+            databaseURL: "https://remoteacsharp-default-rtdb.firebaseio.com",
+            projectId: "remoteacsharp",
+            storageBucket: "remoteacsharp.appspot.com",
+            messagingSenderId: "650415441563",
+        };
+        firebase.initializeApp(config);
+        </script>
+        <script>
+            var tempVal = document.getElementById('suhu');
+            var temperatur = firebase.database().ref().child('Temperature');
+            temperatur.on('value', snap => tempVal.innerText = snap.val() + " °C");
+            temperatur.on('value', snap => nilaiSuhu = snap.val());
+            var powVal = document.getElementById('susu');
+            var power = firebase.database().ref().child('Power');
+            power.on('value', snap => {disableButton = snap.val();
+            if(disableButton == false){
+                document.getElementById("button_min").disabled = true;
+                document.getElementById("button_plus").disabled = true;
+                document.getElementById("suhu").innerHTML = "---";
+            }else{
+                document.getElementById("button_min").disabled = false;
+                document.getElementById("button_plus").disabled = false;
+                text = nilaiSuhu + " °C";
+                document.getElementById("suhu").innerHTML = text;
+            }});
+            // power.on('value', snap => powVal.innerText = snap.val());
+            // nilaiSuhu = temperatur;
+            // console.log(nilaiSuhu);
+        </script>
+
+        
     </body>
 </html>
